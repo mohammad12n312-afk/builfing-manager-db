@@ -1,0 +1,115 @@
+من می‌خواهم یک پروژه وب کامل برای "مدیریت ساختمان" بسازم، MVP ساده ولی عملیاتی، با Frontend و Backend و پایگاه داده، با این مشخصات:
+Frontend:
+تکنولوژی: React با Vite
+صفحات:
+صفحه ورود و ثبت‌نام (Login / Signup)
+فرم ورود مدیر و ساکن
+JWT-based Auth
+داشبورد مدیر
+نمایش وضعیت واحدها (فعال / غیرفعال)
+نمایش پرداخت‌ها و مبلغ هر واحد
+امکان افزودن واحد جدید
+نمایش پیام‌های دریافت شده از ساکنین
+مدیر ساختمان بتونه یک فرم داشته باشه که وضعیت کل ساختمان رو ببینه
+میزان شارژ هر واحد قابل مشاهده باشه
+میزان بدهی هر واحد رو بنویس
+بتونه اعلان بفرسته برای ساکن ها به صورت اعلان
+داشبورد ساکن
+نمایش پرداخت‌ها و وضعیت شارژ
+مشاهده پیام‌های مدیر
+صفحه Chat Room ساده
+ارسال و دریافت پیام بین مدیر و ساکن
+پیام‌ها با REST API ارسال و دریافت شوند
+پیام‌ها ذخیره در دیتابیس
+Frontend به Backend از طریق REST API متصل شود
+Base URL در فایل .env مشخص شود
+Backend:
+تکنولوژی: Node.js با Express
+APIها:
+Auth:
+POST /api/auth/login
+POST /api/auth/signup
+Units:
+GET /api/units
+POST /api/units
+Payments:
+GET /api/payments
+POST /api/payments
+Chat:
+GET /api/chats/:unitId/messages
+POST /api/chats/:unitId/messages
+Middleware:
+cors
+express.json()
+JWT Authentication
+Env Variables:
+DATABASE_URL
+JWT_SECRET
+Database (PostgreSQL):
+جداول:
+users: id, name, email, password, role (admin | resident), unit_id
+units: id, number, resident_id, status (active | inactive)
+payments: id, unit_id, amount, month, status, created_at
+messages: id, sender_type (admin | resident), message, created_at, unit_id
+Chat Room:
+فقط پیام ساده متن بین مدیر و ساکن
+پیام‌ها در جدول messages ذخیره شوند
+real-time ساده با polling (هر چند ثانیه یکبار GET شود)
+Deployment:
+Backend → Render Web Service
+Frontend → Vercel
+Database → Render PostgreSQL
+Env Variables در هر سرویس تنظیم شود
+Security:
+JWT Auth
+Password hashing با bcrypt
+CORS مناسب
+Env variables
+UI/UX:
+ساده و قابل فهم
+داشبورد مدیر و ساکن
+لیست واحدها و پرداخت‌ها
+Chat Room ساده ولی کاربردی
+اضافه کردن سیستم لایسنس و کنترل نقش‌ها به پروژه مدیریت ساختمان:
+Roles:
+SUPER_ADMIN: من (مالک سیستم)، فقط یک نفر
+BUILDING_ADMIN: مدیر ساختمان، توسط SUPER_ADMIN ساخته می‌شود
+RESIDENT: ساکن، فقط توسط BUILDING_ADMIN ساخته می‌شود
+License / Seed Admin:
+هیچ ثبت‌نام عمومی برای مدیر ساختمان وجود ندارد
+SUPER_ADMIN فقط یکبار با Env Variable ساخته می‌شود:
+SUPER_ADMIN_USERNAME
+SUPER_ADMIN_PASSWORD
+در اولین اجرای سرور، اگر SUPER_ADMIN وجود ندارد، ساخته شود
+Backend API اضافه:
+POST /api/admins/create
+تنها توسط SUPER_ADMIN قابل دسترسی
+ایجاد BUILDING_ADMIN با یوزرنیم و پسورد مشخص
+نیاز به JWT SUPER_ADMIN
+POST /api/residents/create
+تنها توسط BUILDING_ADMIN قابل دسترسی
+ایجاد RESIDENT با یوزرنیم و پسورد
+نیاز به JWT BUILDING_ADMIN
+POST /api/auth/login
+یوزرنیم و پسورد هر نقش را قبول کند
+برگرداندن JWT و role
+هیچ مسیر signup عمومی یا register ندارد
+Frontend:
+حذف صفحات Signup عمومی
+صفحات مجاز:
+/login → همه
+/super/dashboard → فقط SUPER_ADMIN
+/admin/dashboard → فقط BUILDING_ADMIN
+/resident/dashboard → فقط RESIDENT
+BUILDING_ADMIN هنگام ساخت RESIDENT می‌تواند یوزرنیم و پسورد ساکن را مشاهده و برایش ارسال کند
+Database:
+جدول users:
+id, name, username, password, role (super_admin | admin | resident), unit_id, created_at
+Security:
+JWT Authentication برای تمام مسیرهای حساس
+Password hashing با bcrypt
+Role-based Access Control (RBAC) برای تمام عملیات حساس
+Env variables برای SUPER_ADMIN و JWT_SECRET
+هدف: سیستم لایسنس‌دار که فقط خود من بتوانم مدیر ساختمان ایجاد کنم و مدیر ساختمان بتواند ساکن ایجاد کند، بدون هیچ ثبت‌نام عمومی و کاملاً امن و قابل توسعه برای ویژگی‌های بعدی.
+هدف نهایی: یک MVP واقعی و عملیاتی برای مدیر ساختمان که بتواند واحدها، پرداخت‌ها و پیام‌های ساکنین را مدیریت کند و آماده توسعه برای ویژگی‌های پیشرفته بعدی باشد. پروژه باید آماده Deploy روی Render و Vercel باشد.
+همه قسمت های این برنامه به زبان فارسی باشه
